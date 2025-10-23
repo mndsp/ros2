@@ -1,0 +1,29 @@
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_TLS_CERTDIR: ""
+
+stages:
+  - Build
+
+default:
+  before_script:
+    - |
+      ########## Download bash scripts ##########
+      git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/safe_nonholonomic_amr_with_lift/devops
+      mv devops/select_branch.sh select_branch.sh
+      rm -rf devops
+      chmod +x select_branch.sh
+      . ./select_branch.sh
+
+      # DEVOPS_BRANCH var is set by the select_branch.sh script
+      git clone -b $DEVOPS_BRANCH --depth=1 https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/safe_nonholonomic_amr_with_lift/devops
+
+build:
+  stage: Build
+  services:
+    - docker:dind
+  image: registry.gitlab.com/safe_nonholonomic_amr_with_lift/devops
+  script:
+    - |
+      ########## Build job ##########
+      . ./devops/config/build.sh
