@@ -26,4 +26,4 @@ build:
   script:
     - |
       ########## Build job ##########
-      . ./devops/scripts/build.sh
+      . ./devops/script/build.sh
