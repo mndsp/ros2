@@ -47,6 +47,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-$ROS_DISTRO-mola-lidar-odometry \
     ros-$ROS_DISTRO-mola-metric-maps \
     ros-$ROS_DISTRO-mola-bridge-ros2 \
+    ros-$ROS_DISTRO-rqt-tf-tree \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Lib CGAL
