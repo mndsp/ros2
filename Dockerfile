@@ -44,6 +44,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-$ROS_DISTRO-sick-safetyscanners2 \
     ros-$ROS_DISTRO-pose-cov-ops \
     ros-$ROS_DISTRO-topic-tools \
+    ros-$ROS_DISTRO-mola-lidar-odometry \
+    ros-$ROS_DISTRO-mola-metric-maps \
+    ros-$ROS_DISTRO-mola-bridge-ros2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Lib CGAL
