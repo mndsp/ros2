@@ -5,19 +5,6 @@ variables:
 stages:
   - Build
 
-# default:
-#   before_script:
-#     - |
-#       ########## Download bash scripts ##########
-#       git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/mndsp/devops
-#       mv devops/select_branch.sh select_branch.sh
-#       rm -rf devops
-#       chmod +x select_branch.sh
-#       . ./select_branch.sh
-
-#       # DEVOPS_BRANCH var is set by the select_branch.sh script
-#       git clone -b $DEVOPS_BRANCH --depth=1 https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/mndsp/devops
-
 build:
   stage: Build
   services:
@@ -26,10 +13,13 @@ build:
   script:
     - |
       ########## Build job ##########
-      # . ./devops/script/build.sh
 
-      docker  buildx build --platform linux/arm64/v8 -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+      # Make sure you have a builder that supports multi‑arch
+      docker buildx create --name multiarch --use
+      docker buildx inspect --bootstrap    # Installs QEMU and other helpers
 
+      # Login to the registry
       echo "$REGISTRY_PWD" | docker login -u $REGISTRY_USER --password-stdin $CI_REGISTRY
 
-      docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+      # Build and push the image
+      docker buildx build --platform linux/arm64/v8 -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" --push .
