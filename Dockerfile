@@ -1,5 +1,5 @@
 # Use ros humble as base image
-FROM --platform=arm64  nvcr.io/nvidia/l4t-jetpack:r36.4.0
+FROM nvcr.io/nvidia/l4t-jetpack:r36.4.0
 
 # Avoid user interaction with tzdata
 ENV DEBIAN_FRONTEND=noninteractive
@@ -34,6 +34,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     vim \
     bluez \
     wget \
+    git \
     libmpfr-dev \
     libmpfrc++-dev \
     libgmp-dev \
