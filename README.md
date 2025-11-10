@@ -34,6 +34,13 @@ docker build -t ros2:jazzy .
 
 This will create a Docker image tagged as `ros2:jazzy` with all dependencies installed.
 
+### Targetting a different architecture
+
+```bash
+sudo apt-get install qemu-system-arm binfmt-support qemu-user-static
+docker buildx build --platform linux/arm64/v8 -t arm64v8/ros2:jazzy .
+```
+
 ## Running the Container
 
 ### Basic Usage
