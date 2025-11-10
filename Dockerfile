@@ -1,4 +1,3 @@
-# Use ros humble as base image
 FROM nvcr.io/nvidia/l4t-jetpack:r36.4.0
 
 # Avoid user interaction with tzdata
