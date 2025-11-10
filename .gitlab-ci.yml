@@ -27,4 +27,4 @@ build:
     - |
       ########## Build job ##########
       # . ./devops/script/build.sh
-      docker  buildx build --platform linux/arm64/v8 -t "arm64v8/$CI_APPLICATION_REPOSITORY:humble" .
+      docker  buildx build --platform linux/arm64/v8 -t "arm64v8/$CI_REGISTRY_IMAGE:humble" .
