@@ -39,6 +39,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libgmp-dev \
     rapidjson-dev \
     software-properties-common \
+    cmake \
     # ros-$ROS_DISTRO-navigation2 \
     # ros-$ROS_DISTRO-nav2-bringup \
     # ros-$ROS_DISTRO-nav2-common \
