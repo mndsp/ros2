@@ -1,5 +1,5 @@
 # Use ros humble as base image
-FROM arm64v8/ros:humble
+FROM --platform=arm64  nvcr.io/nvidia/l4t-jetpack:r36.4.0
 
 # Avoid user interaction with tzdata
 ENV DEBIAN_FRONTEND=noninteractive
@@ -39,19 +39,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libgmp-dev \
     rapidjson-dev \
     software-properties-common \
-    ros-$ROS_DISTRO-navigation2 \
-    ros-$ROS_DISTRO-nav2-bringup \
-    ros-$ROS_DISTRO-nav2-common \
-    ros-$ROS_DISTRO-opennav-docking \
-    ros-$ROS_DISTRO-xacro \
-    ros-$ROS_DISTRO-realsense2-description \
-    ros-$ROS_DISTRO-sick-safetyscanners2 \
-    ros-$ROS_DISTRO-pose-cov-ops \
-    ros-$ROS_DISTRO-topic-tools \
-    ros-$ROS_DISTRO-mola-lidar-odometry \
-    ros-$ROS_DISTRO-mola-metric-maps \
-    ros-$ROS_DISTRO-mola-bridge-ros2 \
-    ros-$ROS_DISTRO-rqt-tf-tree \
+    # ros-$ROS_DISTRO-navigation2 \
+    # ros-$ROS_DISTRO-nav2-bringup \
+    # ros-$ROS_DISTRO-nav2-common \
+    # ros-$ROS_DISTRO-opennav-docking \
+    # ros-$ROS_DISTRO-xacro \
+    # ros-$ROS_DISTRO-realsense2-description \
+    # ros-$ROS_DISTRO-sick-safetyscanners2 \
+    # ros-$ROS_DISTRO-pose-cov-ops \
+    # ros-$ROS_DISTRO-topic-tools \
+    # ros-$ROS_DISTRO-mola-lidar-odometry \
+    # ros-$ROS_DISTRO-mola-metric-maps \
+    # ros-$ROS_DISTRO-mola-bridge-ros2 \
+    # ros-$ROS_DISTRO-rqt-tf-tree \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Lib CGAL
