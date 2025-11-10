@@ -1,8 +1,13 @@
-# Use ros jazzy as base image
-FROM ros:jazzy
+# Use ros humble as base image
+FROM ros:humble
 
 # Avoid user interaction with tzdata
 ENV DEBIAN_FRONTEND=noninteractive
+
+# Setup an user
+ARG C_USER=ubuntu
+ARG C_UID=1000
+ARG C_GID=1000
 
 # Export environment variables
 ENV DOCKER_BUILDKIT=0
@@ -11,7 +16,13 @@ ENV COMPOSE_DOCKER_CLI_BUILD=0
 # Life is better with colors
 RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashrc && \
     sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /root/.bashrc && \
-    sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /home/ubuntu/.bashrc
+    groupadd -g $C_GID $C_USER && \
+    useradd -m -d /home/$C_USER -g $C_GID -s /bin/bash -u $C_UID $C_USER && \
+    usermod -aG plugdev $C_USER && \
+    usermod -aG video $C_USER && \
+    usermod -aG dialout $C_USER && \
+    sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /home/$C_USER/.bashrc && \
+    echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/$C_USER/.bashrc
 
 # Set the locale
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -20,9 +31,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && locale-gen en_US en_US.UTF-8 \
     && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/*
-
-# Set up the ROS 2 environment
-ENV ROS_DISTRO=jazzy
 
 # Update and install necessary tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
