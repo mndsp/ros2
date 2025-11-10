@@ -37,7 +37,6 @@ This will create a Docker image tagged as `ros2:jazzy` with all dependencies ins
 ### Targetting a different architecture
 
 ```bash
-sudo apt-get install qemu-system-arm binfmt-support qemu-user-static
 docker buildx build --platform linux/arm64/v8 -t arm64v8/ros2:jazzy .
 ```
 
@@ -48,7 +47,18 @@ docker buildx build --platform linux/arm64/v8 -t arm64v8/ros2:jazzy .
 Start an interactive container:
 
 ```bash
-docker run -it --rm ros2:jazzy
+docker run -it --rm ros2:jazzy bash
+```
+
+To run a container on a different architecture, emulation is required. Install the necessary packages:
+
+```bash
+sudo apt-get install qemu-system-arm binfmt-support qemu-user-static
+docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+```
+
+```bash
+docker run --platform=linux/arm64/v8 -it --rm arm64v8/ros2:jazzy uname -m
 ```
 
 ### With Mounted Workspace
