@@ -22,7 +22,7 @@ build:
   stage: Build
   services:
     - docker:dind
-  image: registry.gitlab.com/mndsp/devops:ubuntu
+  image: registry.gitlab.com/mndsp/devops
   script:
     - |
       ########## Build job ##########
