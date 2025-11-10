@@ -1,5 +1,5 @@
 # Use ros humble as base image
-FROM ros:humble
+FROM arm64v8/ros:humble
 
 # Avoid user interaction with tzdata
 ENV DEBIAN_FRONTEND=noninteractive
