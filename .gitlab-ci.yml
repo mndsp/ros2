@@ -5,18 +5,18 @@ variables:
 stages:
   - Build
 
-default:
-  before_script:
-    - |
-      ########## Download bash scripts ##########
-      git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/mndsp/devops
-      mv devops/select_branch.sh select_branch.sh
-      rm -rf devops
-      chmod +x select_branch.sh
-      . ./select_branch.sh
+# default:
+#   before_script:
+#     - |
+#       ########## Download bash scripts ##########
+#       git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/mndsp/devops
+#       mv devops/select_branch.sh select_branch.sh
+#       rm -rf devops
+#       chmod +x select_branch.sh
+#       . ./select_branch.sh
 
-      # DEVOPS_BRANCH var is set by the select_branch.sh script
-      git clone -b $DEVOPS_BRANCH --depth=1 https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/mndsp/devops
+#       # DEVOPS_BRANCH var is set by the select_branch.sh script
+#       git clone -b $DEVOPS_BRANCH --depth=1 https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/mndsp/devops
 
 build:
   stage: Build
@@ -27,4 +27,5 @@ build:
     - |
       ########## Build job ##########
       # . ./devops/script/build.sh
-      docker  buildx build --platform linux/arm64/v8 -t "arm64v8/$CI_REGISTRY_IMAGE:humble" .
+      docker  buildx build --platform linux/arm64/v8 -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+      docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
