@@ -9,10 +9,6 @@ ARG C_USER=ubuntu
 ARG C_UID=1000
 ARG C_GID=1000
 
-# Export environment variables
-# ENV DOCKER_BUILDKIT=0
-# ENV COMPOSE_DOCKER_CLI_BUILD=0
-
 # Life is better with colors
 RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashrc && \
     sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /root/.bashrc && \
