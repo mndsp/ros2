@@ -27,8 +27,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/*
 
+# Distribution of ROS2
+ARG ROS_DISTRO=humble
+
 # Update and install necessary tools
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN curl http://repo.ros2.org/repos.key | apt-key add - \
+    && sh -c 'echo "deb [arch=$(dpkg --print-architecture)] http:packages.ros.org/ros2/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros2-latest.list' \
+    && apt-get update && apt-get install -y --no-install-recommends \
     curl \
     vim \
     bluez \
@@ -40,19 +45,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rapidjson-dev \
     software-properties-common \
     cmake \
-    # ros-$ROS_DISTRO-navigation2 \
-    # ros-$ROS_DISTRO-nav2-bringup \
-    # ros-$ROS_DISTRO-nav2-common \
-    # ros-$ROS_DISTRO-opennav-docking \
-    # ros-$ROS_DISTRO-xacro \
-    # ros-$ROS_DISTRO-realsense2-description \
-    # ros-$ROS_DISTRO-sick-safetyscanners2 \
-    # ros-$ROS_DISTRO-pose-cov-ops \
-    # ros-$ROS_DISTRO-topic-tools \
-    # ros-$ROS_DISTRO-mola-lidar-odometry \
-    # ros-$ROS_DISTRO-mola-metric-maps \
-    # ros-$ROS_DISTRO-mola-bridge-ros2 \
-    # ros-$ROS_DISTRO-rqt-tf-tree \
+    ros-$ROS_DISTRO-ros-base \
+    ros-$ROS_DISTRO-navigation2 \
+    ros-$ROS_DISTRO-nav2-bringup \
+    ros-$ROS_DISTRO-nav2-common \
+    ros-$ROS_DISTRO-opennav-docking \
+    ros-$ROS_DISTRO-xacro \
+    ros-$ROS_DISTRO-realsense2-description \
+    ros-$ROS_DISTRO-sick-safetyscanners2 \
+    ros-$ROS_DISTRO-pose-cov-ops \
+    ros-$ROS_DISTRO-topic-tools \
+    ros-$ROS_DISTRO-mola-lidar-odometry \
+    ros-$ROS_DISTRO-mola-metric-maps \
+    ros-$ROS_DISTRO-mola-bridge-ros2 \
+    ros-$ROS_DISTRO-rqt-tf-tree \
+    python3-colcon-common-extensions \
+    python3-rosdep \
+    python3-argcomplete \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Lib CGAL
