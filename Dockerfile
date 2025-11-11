@@ -12,8 +12,8 @@ ARG C_GID=1000
 # Life is better with colors
 RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashrc && \
     sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /root/.bashrc && \
-    groupadd -g $C_GID $C_USER && \
-    useradd -m -d /home/$C_USER -g $C_GID -s /bin/bash -u $C_UID $C_USER && \
+    (groupadd -g $C_GID $C_USER || true) && \
+    (useradd -m -d /home/$C_USER -g $C_GID -s /bin/bash -u $C_UID $C_USER || true) && \
     usermod -aG plugdev $C_USER && \
     usermod -aG video $C_USER && \
     usermod -aG dialout $C_USER && \
