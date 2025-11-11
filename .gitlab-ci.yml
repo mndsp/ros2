@@ -1,13 +1,13 @@
 spec:
   inputs:
+    ROS_DISTROS:
+      type: array
+      description: The ROS distribution to build for
+      default: ["humble", "jazzy"]
     ARCHITECTURES:
       type: array
       description: The architectures to build for
       default: ["aarch64"]
-    ROS_DISTROS:
-      type: array
-      description: The ROS distribution to build for
-      default: ["humble"]
 ---
 variables:
   DOCKER_HOST: tcp://docker:2375/
@@ -54,5 +54,5 @@ build:
         --push .
   parallel:
     matrix:
-      - ARCH: $[[ inputs.ARCHITECTURES ]]
-        ROS_DISTRO: $[[ inputs.ROS_DISTROS ]]
+      - ROS_DISTRO: $[[ inputs.ROS_DISTROS ]]
+        ARCH: $[[ inputs.ARCHITECTURES ]]
