@@ -34,7 +34,13 @@ build:
 
       if [[ $ARCH == "linux/arm64/v8" ]]; then
         SHORT_ARCH="arm64"
+      else
+        SHORT_ARCH=$ARCH
       fi
+
+      # Sanitize SHORT_ARCH – keep only letters, digits, dashes and periods,
+      # replace everything else with a dash
+      SHORT_ARCH=${SHORT_ARCH//[^a-zA-Z0-9.-]/-}
 
       # Build and push the image
       docker buildx build \
