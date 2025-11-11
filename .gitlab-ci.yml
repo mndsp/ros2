@@ -22,4 +22,4 @@ build:
       echo "$REGISTRY_PWD" | docker login -u $REGISTRY_USER --password-stdin $CI_REGISTRY
 
       # Build and push the image
-      docker buildx build --platform linux/arm64/v8 -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME" --pull .
+      docker buildx build --platform linux/arm64/v8 -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME" --push .
