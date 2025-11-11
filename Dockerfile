@@ -35,6 +35,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && curl http://repo.ros2.org/repos.key | apt-key add - \
     && sh -c 'echo "deb [arch=$(dpkg --print-architecture)] http:packages.ros.org/ros2/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros2-latest.list' \
     && apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    g++ \
     vim \
     bluez \
     wget \
