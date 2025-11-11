@@ -18,8 +18,11 @@ build:
       docker buildx create --name multiarch --use
       docker buildx inspect --bootstrap    # Installs QEMU and other helpers
 
+      # Build and push the image
+      docker buildx build --platform linux/arm64/v8 -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+
       # Login to the registry
       echo "$REGISTRY_PWD" | docker login -u $REGISTRY_USER --password-stdin $CI_REGISTRY
 
-      # Build and push the image
-      docker buildx build --platform linux/arm64/v8 -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" --push .
+      # Push the image
+      docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
