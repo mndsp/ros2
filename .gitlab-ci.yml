@@ -61,7 +61,11 @@ build:
       ARCH=${ARCH//[^a-zA-Z0-9.-]/-}
 
       if [[ $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH ]]; then
-        IMAGE_NAME="$CI_REGISTRY_IMAGE:${ROS_DISTRO}-${ARCH}"
+        if [[ $ARCH == "x86_64" ]]; then
+          IMAGE_NAME="$CI_REGISTRY_IMAGE:${ROS_DISTRO}"
+        else
+          IMAGE_NAME="$CI_REGISTRY_IMAGE:${ROS_DISTRO}-${ARCH}"
+        fi
       else
         IMAGE_NAME="$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:${ROS_DISTRO}-${ARCH}"
       fi
