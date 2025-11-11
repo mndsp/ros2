@@ -4,10 +4,10 @@ spec:
       type: array
       description: The ROS distribution to build for
       default: ["humble", "jazzy"]
-    ARCHITECTURES:
+    HW_TARGETS:
       type: array
       description: The architectures to build for
-      default: ["aarch64"]
+      default: ["aarch64", "x86_64", "jetpack-6.2"]
 ---
 variables:
   DOCKER_HOST: tcp://docker:2375/
@@ -25,19 +25,26 @@ build:
     - |
       ########## Build job ##########
 
+      # Skip building for jazzy on jetpack-6.2
+      if [[ $ROS_DISTRO == "jazzy" && $ARCH == "jetpack-6.2" ]]; then
+        exit 0
+      fi
+
       # Make sure you have a builder that supports multi‑arch
       docker buildx create --name multiarch --use
       docker buildx inspect --bootstrap    # Installs QEMU and other helpers
 
-      # Login to the registry
-      echo "$REGISTRY_PWD" | docker login -u $REGISTRY_USER --password-stdin $CI_REGISTRY
-
       if [[ $ROS_DISTRO == "humble" ]]; then
-        BASE_IMAGE="ubuntu:22.04"
+        if [[ $ARCH == "jetpack-6.2" ]]; then
+          BASE_IMAGE="nvcr.io/nvidia/l4t-jetpack:r36.4.0"
+        else
+          BASE_IMAGE="ubuntu:22.04"
+        fi
       elif [[ $ROS_DISTRO == "jazzy" ]]; then
         BASE_IMAGE="ubuntu:24.04"
       else
-        BASE_IMAGE="ubuntu:22.04"
+        echo -e "Unknown ROS_DISTRO: $ROS_DISTRO! Quitting..."
+        exit 1
       fi
 
       # Set the platform according to the architecture
@@ -60,6 +67,9 @@ build:
         IMAGE_NAME="$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:${ROS_DISTRO}-${ARCH}"
       fi
 
+      # Login to the registry
+      echo "$REGISTRY_PWD" | docker login -u $REGISTRY_USER --password-stdin $CI_REGISTRY
+
       # Build and push the image
       docker buildx build \
         --platform $PLATFORM \
@@ -71,4 +81,4 @@ build:
   parallel:
     matrix:
       - ROS_DISTRO: $[[ inputs.ROS_DISTROS ]]
-        ARCH: $[[ inputs.ARCHITECTURES ]]
+        ARCH: $[[ inputs.HW_TARGETS ]]
