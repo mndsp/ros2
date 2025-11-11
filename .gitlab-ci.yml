@@ -1,3 +1,14 @@
+spec:
+  inputs:
+    ARCHITECTURES:
+      type: array
+      description: The architectures to build for
+      default: ["linux/arm64/v8"]
+    ROS_DISTROS:
+      type: array
+      description: The ROS distribution to build for
+      default: ["humble"]
+---
 variables:
   DOCKER_HOST: tcp://docker:2375/
   DOCKER_TLS_CERTDIR: ""
@@ -21,5 +32,18 @@ build:
       # Login to the registry
       echo "$REGISTRY_PWD" | docker login -u $REGISTRY_USER --password-stdin $CI_REGISTRY
 
+      if [[ $ARCH == "linux/arm64/v8" ]]; then
+        SHORT_ARCH="arm64"
+      fi
+
       # Build and push the image
-      docker buildx build --platform linux/arm64/v8 -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME" --push .
+      docker buildx build \
+        --platform $ARCH \
+        --build-arg ROS_DISTRO=$ROS_DISTRO \
+        -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME" \
+        -t "$CI_REGISTRY_IMAGE:${ROS_DISTRO}-${SHORT_ARCH}" \
+        --push .
+  parallel:
+    matrix:
+      - ARCH: $[[ inputs.ARCHITECTURES ]]
+      - ROS_DISTRO: $[[ inputs.ROS_DISTROS ]]

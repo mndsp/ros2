@@ -21,6 +21,7 @@ RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashr
 
 # Distribution of ROS2
 ARG ROS_DISTRO=humble
+ENV ROS_DISTRO=$ROS_DISTRO
 
 # Set the locale and lsb-release needed by dpkg --print-architecture
 RUN apt-get update && apt-get install -y --no-install-recommends \
