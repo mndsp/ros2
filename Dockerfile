@@ -92,11 +92,15 @@ RUN cd /tmp \
     && cd /tmp \
     && rm -rf /tmp/nlopt
 
-# Install boost 1.83 which fixes some header deprecation warnings
-RUN add-apt-repository ppa:mhier/libboost-latest \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends libboost1.83-all-dev \
-    && rm -rf /var/lib/apt/lists/*
+# Install boost 1.83 only if a newer version is not already available
+# This checks the current boost version and installs 1.83 only if needed
+RUN CURRENT_BOOST=$(dpkg -l | grep -E 'libboost[0-9]+(\.[0-9]+)*-dev' | head -1 | grep -oE '[0-9]+\.[0-9]+' | head -1) \
+    && if [ -z "$CURRENT_BOOST" ] || [ "$(printf '%s\n' "1.83" "$CURRENT_BOOST" | sort -V | head -n1)" != "1.83" ]; then \
+         add-apt-repository ppa:mhier/libboost-latest -y \
+         && apt-get update \
+         && apt-get install -y --no-install-recommends libboost1.83-all-dev \
+         && rm -rf /var/lib/apt/lists/*; \
+       fi
 
 # Install FTXUI
 RUN cd /tmp \
