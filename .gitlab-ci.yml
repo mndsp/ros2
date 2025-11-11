@@ -35,12 +35,17 @@ build:
       # Set the platform according to the architecture
       if [[ $ARCH == "aarch64" ]]; then
         PLATFORM="linux/arm64/v8"
-        BASE_IMAGE="nvcr.io/nvidia/l4t-jetpack:r36.4.0"      # building for jetson orin jetpack 6.2
       elif [[ $ARCH == "x86_64" ]]; then
         PLATFORM="linux/amd64"
-        BASE_IMAGE="ubuntu:22.04"
       else
         PLATFORM=$ARCH
+      fi
+
+      if [[ $ROS_DISTRO == "humble" ]]; then
+        BASE_IMAGE="ubuntu:22.04"
+      elif [[ $ROS_DISTRO == "jazzy" ]]; then
+        BASE_IMAGE="ubuntu:24.04"
+      else
         BASE_IMAGE="ubuntu:22.04"
       fi
 
