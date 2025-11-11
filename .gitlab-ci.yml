@@ -35,11 +35,7 @@ build:
       docker buildx inspect --bootstrap    # Installs QEMU and other helpers
 
       if [[ $ROS_DISTRO == "humble" ]]; then
-        if [[ $ARCH == "jetpack-6.2" ]]; then
-          BASE_IMAGE="nvcr.io/nvidia/l4t-jetpack:r36.4.0"
-        else
-          BASE_IMAGE="ubuntu:22.04"
-        fi
+        BASE_IMAGE="ubuntu:22.04"
       elif [[ $ROS_DISTRO == "jazzy" ]]; then
         BASE_IMAGE="ubuntu:24.04"
       else
@@ -53,6 +49,9 @@ build:
         BASE_IMAGE="arm64v8/$BASE_IMAGE"
       elif [[ $ARCH == "x86_64" ]]; then
         PLATFORM="linux/amd64"
+      elif [[ $ARCH == "jetpack-6.2" ]]; then
+        PLATFORM="linux/arm64/v8"
+        BASE_IMAGE="nvcr.io/nvidia/l4t-jetpack:r36.4.0"
       else
         PLATFORM=$ARCH
       fi
