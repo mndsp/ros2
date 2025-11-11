@@ -3,7 +3,7 @@ spec:
     ARCHITECTURES:
       type: array
       description: The architectures to build for
-      default: ["linux/arm64/v8"]
+      default: ["aarch64"]
     ROS_DISTROS:
       type: array
       description: The ROS distribution to build for
@@ -32,22 +32,25 @@ build:
       # Login to the registry
       echo "$REGISTRY_PWD" | docker login -u $REGISTRY_USER --password-stdin $CI_REGISTRY
 
-      if [[ $ARCH == "linux/arm64/v8" ]]; then
-        SHORT_ARCH="arm64"
+      # Set the platform according to the architecture
+      if [[ $ARCH == "aarch64" ]]; then
+        PLATFORM="linux/arm64/v8"
+      elif [[ $ARCH == "x86_64" ]]; then
+        PLATFORM="linux/amd64"
       else
-        SHORT_ARCH=$ARCH
+        PLATFORM=$ARCH
       fi
 
-      # Sanitize SHORT_ARCH – keep only letters, digits, dashes and periods,
+      # Sanitize ARCH – keep only letters, digits, dashes and periods,
       # replace everything else with a dash
-      SHORT_ARCH=${SHORT_ARCH//[^a-zA-Z0-9.-]/-}
+      ARCH=${ARCH//[^a-zA-Z0-9.-]/-}
 
       # Build and push the image
       docker buildx build \
-        --platform $ARCH \
+        --platform $PLATFORM \
         --build-arg ROS_DISTRO=$ROS_DISTRO \
         -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME" \
-        -t "$CI_REGISTRY_IMAGE:${ROS_DISTRO}-${SHORT_ARCH}" \
+        -t "$CI_REGISTRY_IMAGE:${ROS_DISTRO}-${ARCH}" \
         --push .
   parallel:
     matrix:
