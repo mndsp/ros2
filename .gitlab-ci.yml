@@ -46,4 +46,4 @@ build:
   parallel:
     matrix:
       - ARCH: $[[ inputs.ARCHITECTURES ]]
-      - ROS_DISTRO: $[[ inputs.ROS_DISTROS ]]
+        ROS_DISTRO: $[[ inputs.ROS_DISTROS ]]
