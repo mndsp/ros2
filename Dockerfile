@@ -19,22 +19,20 @@ RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashr
     sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /home/$C_USER/.bashrc && \
     echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/$C_USER/.bashrc
 
-# Set the locale
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    locales \
-    && rm -rf /var/lib/apt/lists/* \
-    && locale-gen en_US en_US.UTF-8 \
-    && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
-    && rm -rf /var/lib/apt/lists/*
-
 # Distribution of ROS2
 ARG ROS_DISTRO=humble
 
-# Update and install necessary tools
-RUN curl http://repo.ros2.org/repos.key | apt-key add - \
+# Set the locale and lsb-release needed by dpkg --print-architecture
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    locales \
+    lsb-release \
+    curl \
+    && locale-gen en_US en_US.UTF-8 \
+    && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
+    && apt-get clean all \
+    && curl http://repo.ros2.org/repos.key | apt-key add - \
     && sh -c 'echo "deb [arch=$(dpkg --print-architecture)] http:packages.ros.org/ros2/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros2-latest.list' \
     && apt-get update && apt-get install -y --no-install-recommends \
-    curl \
     vim \
     bluez \
     wget \
