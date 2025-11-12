@@ -7,7 +7,7 @@ spec:
     HW_TARGETS:
       type: array
       description: The architectures to build for
-      default: ["aarch64", "x86_64", "jetpack-6.2"]
+      default: ["aarch64", "x86_64"]
 ---
 variables:
   DOCKER_HOST: tcp://docker:2375/
