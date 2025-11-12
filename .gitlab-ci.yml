@@ -56,12 +56,12 @@ build:
         PLATFORM=$ARCH
       fi
 
-      # Sanitize ARCH – keep only letters, digits, dashes and periods,
+      # Sanitize ARCH before using it as part of the tag name – keep only letters, digits, dashes and periods,
       # replace everything else with a dash
       ARCH=${ARCH//[^a-zA-Z0-9.-]/-}
 
       if [[ $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH ]]; then
-        if [[ $ARCH == "x86_64" ]]; then
+        if [[ $ARCH == "x86-64" ]]; then
           IMAGE_NAME="$CI_REGISTRY_IMAGE:${ROS_DISTRO}"
         else
           IMAGE_NAME="$CI_REGISTRY_IMAGE:${ROS_DISTRO}-${ARCH}"
