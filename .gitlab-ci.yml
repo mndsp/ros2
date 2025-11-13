@@ -18,9 +18,10 @@ stages:
 
 build:
   stage: Build
+  tags: [$ARCH]
   services:
     - docker:dind
-  image: docker:latest
+  image: cgr.dev/chainguard/docker-dind
   script:
     - |
       ########## Build job ##########
