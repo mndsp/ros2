@@ -56,7 +56,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-$ROS_DISTRO-nav2-common \
     ros-$ROS_DISTRO-opennav-docking \
     ros-$ROS_DISTRO-xacro \
-    ros-$ROS_DISTRO-realsense2-description \
     ros-$ROS_DISTRO-sick-safetyscanners2 \
     ros-$ROS_DISTRO-pose-cov-ops \
     ros-$ROS_DISTRO-topic-tools \
@@ -64,6 +63,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-$ROS_DISTRO-mola-metric-maps \
     ros-$ROS_DISTRO-mola-bridge-ros2 \
     ros-$ROS_DISTRO-rqt-tf-tree \
+    ros-$ROS_DISTRO-librealsense2 \
+    ros-$ROS_DISTRO-realsense2-* \
     python3-colcon-common-extensions \
     python3-rosdep \
     python3-argcomplete \
@@ -114,18 +115,6 @@ RUN cd /tmp \
     && make -j$(nproc) \
     && make install \
     && rm -rf /tmp/FTXUI
-
-# Install librealsense
-RUN cd /tmp \
-    && git clone --depth 1 https://github.com/IntelRealSense/librealsense.git -b v2.57.4 \
-    && cd librealsense \
-    && mkdir build \
-    && cd build \
-    && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local \
-      -DBUILD_EXAMPLES=false -DBUILD_GRAPHICAL_EXAMPLES=false -DBUILD_TOOLS=true \
-    && make -j$(nproc) \
-    && make install \
-    && rm -rf /tmp/librealsense
 
 # setup entrypoint
 COPY ./ros_entrypoint.sh /
