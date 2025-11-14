@@ -113,6 +113,19 @@ RUN cd /tmp \
     && make install \
     && rm -rf /tmp/FTXUI
 
+# Install librealsense
+RUN cd /tmp \
+    && git clone --depth 1 https://github.com/IntelRealSense/librealsense.git -b v2.57.4 \
+    && cd librealsense \
+    && ./scripts/setup_udev_rules.sh \
+    && mkdir build \
+    && cd build \
+    && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local \
+    -DBUILD_EXAMPLES=false -DBUILD_GRAPHICAL_EXAMPLES=false -DBUILD_TOOLS=true -DBUILD_WITH_TM2=false \
+    && make -j$(nproc) \
+    && make install \
+    && rm -rf /tmp/librealsense
+
 # setup entrypoint
 COPY ./ros_entrypoint.sh /
 
