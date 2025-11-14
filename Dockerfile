@@ -48,6 +48,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libgmp-dev \
     rapidjson-dev \
     v4l-utils \
+    libusb-1.0-0-dev \
     software-properties-common \
     ros-$ROS_DISTRO-ros-base \
     ros-$ROS_DISTRO-navigation2 \
@@ -121,7 +122,7 @@ RUN cd /tmp \
     && mkdir build \
     && cd build \
     && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local \
-    -DBUILD_EXAMPLES=false -DBUILD_GRAPHICAL_EXAMPLES=false -DBUILD_TOOLS=true -DBUILD_WITH_TM2=false \
+      -DBUILD_EXAMPLES=false -DBUILD_GRAPHICAL_EXAMPLES=false -DBUILD_TOOLS=true \
     && make -j$(nproc) \
     && make install \
     && rm -rf /tmp/librealsense
