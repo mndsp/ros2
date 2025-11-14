@@ -47,6 +47,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libmpfrc++-dev \
     libgmp-dev \
     rapidjson-dev \
+    v4l-utils \
     software-properties-common \
     ros-$ROS_DISTRO-ros-base \
     ros-$ROS_DISTRO-navigation2 \
@@ -117,7 +118,6 @@ RUN cd /tmp \
 RUN cd /tmp \
     && git clone --depth 1 https://github.com/IntelRealSense/librealsense.git -b v2.57.4 \
     && cd librealsense \
-    && ./scripts/setup_udev_rules.sh \
     && mkdir build \
     && cd build \
     && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local \
