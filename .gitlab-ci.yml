@@ -23,8 +23,7 @@ build:
     - docker:dind
   image: cgr.dev/chainguard/docker-dind
   script:
-    - ./ci_scripts/multiarch_distro_build.sh
-
+    - ./ci_scripts/multi_arch_distro_build.sh
   parallel:
     matrix:
       - ROS_DISTRO: $[[ inputs.ROS_DISTROS ]]
