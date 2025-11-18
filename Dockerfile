@@ -9,6 +9,10 @@ ARG C_USER=ubuntu
 ARG C_UID=1000
 ARG C_GID=1000
 
+# Distribution of ROS2
+ARG ROS_DISTRO=humble
+ENV ROS_DISTRO=$ROS_DISTRO
+
 # Life is better with colors
 RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashrc && \
     sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /root/.bashrc && \
@@ -19,10 +23,6 @@ RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashr
     usermod -aG dialout $C_USER && \
     sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /home/$C_USER/.bashrc && \
     echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/$C_USER/.bashrc
-
-# Distribution of ROS2
-ARG ROS_DISTRO=humble
-ENV ROS_DISTRO=$ROS_DISTRO
 
 # Set the locale and lsb-release needed by dpkg --print-architecture
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -94,17 +94,6 @@ RUN cd /tmp \
     && make install \
     && cd /tmp \
     && rm -rf /tmp/nlopt
-
-# Install boost 1.83 only if a newer version is not already available
-# This checks the current boost version and installs 1.83 only if needed
-# RUN CURRENT_BOOST=$(dpkg -l | grep -E 'libboost[0-9]+(\.[0-9]+)*-dev' | head -1 | grep -oE '[0-9]+\.[0-9]+' | head -1) \
-#     && if [ -z "$CURRENT_BOOST" ] || [ "$(printf '%s\n' "1.83" "$CURRENT_BOOST" | sort -V | head -n1)" != "1.83" ]; then \
-#          apt-get purge libboost \
-#          && add-apt-repository ppa:mhier/libboost-latest -y \
-#          && apt-get update \
-#          && apt-get install -y --no-install-recommends libboost1.83-all-dev \
-#          && rm -rf /var/lib/apt/lists/*; \
-#        fi
 
 # Install FTXUI
 RUN cd /tmp \
