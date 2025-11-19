@@ -70,15 +70,17 @@ jobs:
           # Set platform and base image according to architecture
           if [[ "${{ matrix.arch }}" == "aarch64" ]]; then
             echo "PLATFORM=linux/arm64/v8" >> $GITHUB_ENV
-            echo "BASE_IMAGE=arm64v8/$BASE_IMAGE" >> $GITHUB_ENV
+            BASE_IMAGE=arm64v8/$BASE_IMAGE
           elif [[ "${{ matrix.arch }}" == "x86_64" ]]; then
             echo "PLATFORM=linux/amd64" >> $GITHUB_ENV
           elif [[ "${{ matrix.arch }}" == "jetpack-6.2" ]]; then
             echo "PLATFORM=linux/arm64/v8" >> $GITHUB_ENV
-            echo "BASE_IMAGE=nvcr.io/nvidia/l4t-jetpack:r36.4.0" >> $GITHUB_ENV
+            BASE_IMAGE=nvcr.io/nvidia/l4t-jetpack:r36.4.0
           else
             echo "PLATFORM=${{ matrix.arch }}" >> $GITHUB_ENV
           fi
+
+          echo "BASE_IMAGE=$BASE_IMAGE" >> $GITHUB_ENV
 
       - name: Set docker image and tag
         run: |
