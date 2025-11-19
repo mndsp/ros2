@@ -59,9 +59,9 @@ jobs:
         run: |
           # Set base image based on ROS distribution
           if [[ "${{ matrix.ros_distro }}" == "humble" ]]; then
-            echo "BASE_IMAGE=ubuntu:22.04" >> $GITHUB_ENV
+            BASE_IMAGE=ubuntu:22.04
           elif [[ "${{ matrix.ros_distro }}" == "jazzy" ]]; then
-            echo "BASE_IMAGE=ubuntu:24.04" >> $GITHUB_ENV
+            BASE_IMAGE=ubuntu:24.04
           else
             echo "Unsupported ROS_DISTRO: ${{ matrix.ros_distro }}! Quitting..."
             exit 1
@@ -101,11 +101,10 @@ jobs:
 
           # Set tag
           if [[ "${{ env.ARCH }}" == "x86_64" ]]; then
-            TAG=${{ matrix.ros_distro }}
+            echo "TAG=${{ matrix.ros_distro }}" >> $GITHUB_ENV
           else
-            TAG=${{ matrix.ros_distro }}-$SANITIZED_ARCH
+            echo "TAG=${{ matrix.ros_distro }}-$SANITIZED_ARCH" >> $GITHUB_ENV
           fi
-          echo "TAG=$TAG" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
