@@ -105,7 +105,7 @@ jobs:
           SANITIZED_ARCH=${SANITIZED_ARCH,,}           # transform to lower case
 
           # Set tag
-          if [[ "${{ env.ARCH }}" == "x86_64" ]]; then
+          if [[ "$ARCH" == "x86_64" ]]; then
             echo "TAG=${{ matrix.ros_distro }}" >> $GITHUB_ENV
           else
             echo "TAG=${{ matrix.ros_distro }}-$SANITIZED_ARCH" >> $GITHUB_ENV
