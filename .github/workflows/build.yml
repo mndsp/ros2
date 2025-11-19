@@ -26,6 +26,9 @@ env:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      packages: write
     name: Build for ${{ matrix.ros_distro }} on ${{ matrix.arch }}
     runs-on: ubuntu-latest
     strategy:
