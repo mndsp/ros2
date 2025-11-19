@@ -6,15 +6,9 @@ if [[ $ROS_DISTRO == "jazzy" && $ARCH == "jetpack-6.2" ]]; then
     exit 0
 fi
 
-# Check if we're running in GitHub Actions
-if [[ -n "$GITHUB_ACTIONS" ]]; then
-    # In GitHub Actions, Docker is already set up with buildx
-    echo "Running in GitHub Actions environment"
-else
-    # Make sure you have a builder that supports multi‑arch
-    docker buildx create --name multiarch --use
-    docker buildx inspect --bootstrap    # Installs QEMU and other helpers
-fi
+# Make sure you have a builder that supports multi‑arch
+docker buildx create --name multiarch --use
+docker buildx inspect --bootstrap    # Installs QEMU and other helpers
 
 if [[ $ROS_DISTRO == "humble" ]]; then
     BASE_IMAGE="ubuntu:22.04"
@@ -42,46 +36,20 @@ fi
 # replace everything else with a dash
 ARCH=${ARCH//[^a-zA-Z0-9.-]/-}
 
-# Determine registry and image naming based on environment
-if [[ -n "$GITHUB_ACTIONS" ]]; then
-    # GitHub Actions environment variables
-    REGISTRY="ghcr.io"
-    REPO_OWNER=$(echo "$GITHUB_REPOSITORY" | cut -d'/' -f1)
-    
-    if [[ "$GITHUB_REF_NAME" == "$GITHUB_EVENT_NAME" ]]; then
-        IMAGE_BASE_NAME="$REGISTRY/$REPO_OWNER"
-    else
-        SLUGIFIED_REF=$(echo "$GITHUB_REF_NAME" | sed 's/[^a-zA-Z0-9.-]/-/g' | tr '[:upper:]' '[:lower:]')
-        IMAGE_BASE_NAME="$REGISTRY/$REPO_OWNER/$SLUGIFIED_REF"
-    fi
-    
-    # For GitHub Actions, we'll use the standard tagging approach
-    if [[ $ARCH == "x86_64" ]]; then
-        IMAGE_NAME="${IMAGE_BASE_NAME}:${ROS_DISTRO}"
-    else
-        IMAGE_NAME="${IMAGE_BASE_NAME}:${ROS_DISTRO}-${ARCH}"
-    fi
+if [[ $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH ]]; then
+    IMAGE_BASE_NAME=$CI_REGISTRY_IMAGE
 else
-    # GitLab CI environment variables (original behavior)
-    if [[ $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH ]]; then
-        IMAGE_BASE_NAME=$CI_REGISTRY_IMAGE
-    else
-        IMAGE_BASE_NAME="${CI_REGISTRY_IMAGE}/${CI_COMMIT_REF_SLUG}"
-    fi
+    IMAGE_BASE_NAME="${CI_REGISTRY_IMAGE}/${CI_COMMIT_REF_SLUG}"
+fi
 
-    if [[ $ARCH == "x86_64" ]]; then
-        IMAGE_NAME="${IMAGE_BASE_NAME}:${ROS_DISTRO}"
-    else
-        IMAGE_NAME="${IMAGE_BASE_NAME}:${ROS_DISTRO}-${ARCH}"
-    fi
+if [[ $ARCH == "x86-64" ]]; then
+    IMAGE_NAME="${IMAGE_BASE_NAME}:${ROS_DISTRO}"
+else
+    IMAGE_NAME="${IMAGE_BASE_NAME}:${ROS_DISTRO}-${ARCH}"
 fi
 
 # Login to the registry
-if [[ -n "$GITHUB_ACTIONS" ]]; then
-    echo "$GITHUB_TOKEN" | docker login -u $GITHUB_ACTOR --password-stdin $REGISTRY
-else
-    echo "$REGISTRY_PWD" | docker login -u $REGISTRY_USER --password-stdin $CI_REGISTRY
-fi
+echo "$REGISTRY_PWD" | docker login -u $REGISTRY_USER --password-stdin $CI_REGISTRY
 
 # Build and push the image
 docker buildx build \
@@ -89,4 +57,5 @@ docker buildx build \
     --build-arg ROS_DISTRO=$ROS_DISTRO \
     --build-arg BASE_IMAGE=$BASE_IMAGE \
     -t $IMAGE_NAME \
+    -t ${CI_REGISTRY_IMAGE}:${CI_JOB_ID} \
     --push .
