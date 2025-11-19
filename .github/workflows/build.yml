@@ -103,7 +103,7 @@ jobs:
           if [[ "${{ env.ARCH }}" == "x86_64" ]]; then
             TAG=${{ matrix.ros_distro }}
           else
-            TAG=${{ matrix.ros_distro }}-$SANITIZED_ARCH"
+            TAG=${{ matrix.ros_distro }}-$SANITIZED_ARCH
           fi
           echo "TAG=$TAG" >> $GITHUB_ENV
 
