@@ -130,5 +130,7 @@ jobs:
           tags: |
             ghcr.io/${{ env.IMG_NAME }}:${{ env.TAG }}
           push: ${{ github.event_name != 'pull_request' }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # Disable Docker layer cache to force rebuilding all layers
+          no-cache: true
+          # Always pull the base image to ensure it's up-to-date
+          pull: true
