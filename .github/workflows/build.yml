@@ -14,11 +14,11 @@ on:
       ros_distros:
         description: 'ROS distributions to build (comma-separated)'
         required: false
-        default: 'humble,jazzy'
+        default: '"humble","jazzy"'
       hw_targets:
         description: 'Hardware targets to build (comma-separated)'
         required: false
-        default: 'aarch64,x86_64'
+        default: '"aarch64","x86_64"'
 
 env:
   REGISTRY: ghcr.io
@@ -40,9 +40,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
