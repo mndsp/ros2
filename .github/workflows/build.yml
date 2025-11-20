@@ -30,7 +30,7 @@ jobs:
       contents: read
       packages: write
     name: Build for ${{ matrix.ros_distro }} on ${{ matrix.arch }}
-    runs-on: ${{ matrix.ros_distro == 'humble' && 'ubuntu-22.04' || matrix.ros_distro == 'jazzy' && 'ubuntu-24.04' || 'ubuntu-latest' }}
+    runs-on: ${{ format('{0}{1}', matrix.ros_distro == 'humble' && 'ubuntu-22.04' || matrix.ros_distro == 'jazzy' && 'ubuntu-24.04' || 'ubuntu-latest', matrix.arch == 'aarch64' && '-arm' || '') }}
     strategy:
       matrix:
         ros_distro: ${{ fromJSON(format('[{0}]', inputs.ros_distros || '"humble","jazzy"')) }}
