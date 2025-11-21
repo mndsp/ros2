@@ -50,6 +50,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     v4l-utils \
     libusb-1.0-0-dev \
     software-properties-common \
+    libgeographic-dev \
     ros-$ROS_DISTRO-ros-base \
     ros-$ROS_DISTRO-navigation2 \
     ros-$ROS_DISTRO-nav2-bringup \
@@ -107,15 +108,15 @@ RUN cd /tmp \
     && rm -rf /tmp/FTXUI
 
 # livox driver does not get installed by rosdep
-RUN git clone --depth 1 -b v1.2.5 https://github.com/Livox-SDK/Livox-SDK2.git \
+RUN cd /tmp \
+    && git clone --depth 1 -b v1.2.5 https://github.com/Livox-SDK/Livox-SDK2.git \
     && cd Livox-SDK2 \
     && mkdir build \
     && cd build \
     && cmake .. \
     && make -j$(nproc) \
     && make install \
-    && cd .. \
-    && rm -rf Livox-SDK2
+    && rm -rf /tmp/Livox-SDK2
 
 # setup entrypoint
 COPY ./ros_entrypoint.sh /
