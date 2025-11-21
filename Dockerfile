@@ -106,6 +106,17 @@ RUN cd /tmp \
     && make install \
     && rm -rf /tmp/FTXUI
 
+# livox driver does not get installed by rosdep
+RUN git clone --depth 1 -b v1.2.5 https://github.com/Livox-SDK/Livox-SDK2.git \
+    && cd Livox-SDK2 \
+    && mkdir build \
+    && cd build \
+    && cmake .. \
+    && make -j$(nproc) \
+    && make install \
+    && cd .. \
+    && rm -rf Livox-SDK2
+
 # setup entrypoint
 COPY ./ros_entrypoint.sh /
 
